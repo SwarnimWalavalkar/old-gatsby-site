@@ -1,0 +1,80 @@
+@import "~bulma/bulma.sass";
+
+//VARIABLES
+
+// $dotColor: #000;
+// $lineColor: #a4a4a4;
+// $bgColor: #fff;
+
+$dotColor: #135fb5;
+$lineColor: #2e4b8d;
+$bgColor: #1b2c52;
+
+.header {
+  color: white;
+  background: radial-gradient($dotColor 3px, transparent 4px),
+    radial-gradient($dotColor 3px, transparent 4px),
+    linear-gradient($bgColor 4px, transparent 0),
+    linear-gradient(
+      45deg,
+      transparent 74px,
+      transparent 75px,
+      $lineColor 75px,
+      $lineColor 76px,
+      transparent 77px,
+      transparent 109px
+    ),
+    linear-gradient(
+      -45deg,
+      transparent 75px,
+      transparent 76px,
+      $lineColor 76px,
+      $lineColor 77px,
+      transparent 78px,
+      transparent 109px
+    ),
+    $bgColor;
+  background-size: 109px 109px, 109px 109px, 100% 6px, 109px 109px, 109px 109px;
+  background-position: 54px 55px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
+  height: 30vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  h1 {
+    font-size: 3.3em;
+    font-weight: 500;
+  }
+}
+
+.projectsContainer {
+  background: linear-gradient(
+        90deg,
+        hsl(222, 51, 37) (22px - 1px),
+        transparent 1%
+      )
+      center,
+    linear-gradient(hsl(222, 51, 37) (22px - 1px), transparent 1%) center,
+    rgb(255, 255, 255);
+  background-size: 22px 22px;
+
+  height: 100vh;
+
+  .columns {
+    background: linear-gradient(
+          90deg,
+          hsl(222, 51, 37) (22px - 1px),
+          transparent 1%
+        )
+        center,
+      linear-gradient(hsl(222, 51, 37) (22px - 1px), transparent 1%) center,
+      rgb(255, 255, 255);
+    background-size: 22px 22px;
+  }
+
+  .column {
+    display: flex;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,42 @@
+@import "~bulma/bulma.sass";
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+
+.wrapper {
+  height: 100vh;
+  background-color: #151923;
+  color: #fff;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  text-align: center;
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .content {
+      h1 {
+        font-family: "Roboto Mono", monospace;
+      }
+    }
+
+    .btn {
+      text-decoration: none;
+      padding: 8px 8px;
+      background-color: #135fb5;
+      color: #fff;
+      border-radius: 2px;
+
+      &:hover {
+        color: #fff;
+        background: transparent;
+        border: 1px solid #fff;
+        transition: ease-in-out 100ms;
+      }
+    }
+  }
+}

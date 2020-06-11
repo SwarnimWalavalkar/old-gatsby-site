@@ -1,0 +1,23 @@
+@import "~bulma/bulma.sass";
+
+.header {
+  color: #fff;
+  background-color: #1b2c52;
+  height: 30vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  h1 {
+    font-size: 5em;
+  }
+}
+
+.wrapper {
+  padding-top: 12px;
+  background-color: #2e4b8e;
+  .container {
+    background-color: #2e4b8e;
+  }
+}

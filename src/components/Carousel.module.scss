@@ -1,0 +1,15 @@
+button {
+  padding: 0;
+  border: none;
+  font: inherit;
+  font-size: 1.5em;
+  color: inherit;
+  background-color: transparent;
+  /* show a hand cursor on hover; some argue that we
+  should keep the default arrow cursor for buttons */
+  cursor: pointer;
+
+  &:nth-of-type(1) {
+    margin-right: 10px;
+  }
+}

@@ -1,0 +1,46 @@
+@import "~bulma/bulma.sass";
+
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@500&display=swap");
+
+.hero {
+  background-color: #151923;
+  color: white;
+}
+
+.content {
+  color: #fff;
+
+  p {
+    font-family: "Work Sans", sans-serif;
+  }
+
+  a {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid #fff;
+
+    &:hover {
+      color: #fff;
+      padding-bottom: 1px;
+    }
+  }
+}
+
+.social {
+  display: flex;
+  flex-flow: row nowrap;
+
+  justify-content: start;
+  margin: 10px;
+
+  a {
+    font-size: 1.4em;
+    padding: 1em;
+    color: inherit;
+    text-decoration: inherit;
+
+    &:hover {
+      color: rgb(224, 224, 224);
+    }
+  }
+}

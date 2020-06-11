@@ -1,0 +1,81 @@
+$text: #fff;
+@import "~bulma/bulma.sass";
+
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+
+.wrapper {
+  padding: 20px;
+  background-color: #151923;
+  height: 100%;
+  .container {
+    background-color: #151923;
+    height: 100%;
+
+    .column {
+      padding: 12px;
+
+      .content {
+        min-height: 100vh;
+
+        div {
+          padding: 12px;
+        }
+
+        .columns a {
+          margin-right: 10px;
+          color: #2e2e2e;
+          border: none;
+
+          &:hover {
+            padding-bottom: 0;
+          }
+        }
+      }
+      .subscribe {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
+
+    a {
+      color: #fff;
+      text-decoration: none;
+      border-bottom: 1px solid #fff;
+
+      span {
+        color: #000;
+        margin: 4px;
+      }
+
+      &:hover {
+        color: #fff;
+        padding-bottom: 1px;
+      }
+    }
+
+    p {
+      font-family: "Inter", sans-serif;
+    }
+
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: "Inter", sans-serif;
+    }
+
+    p,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    em,
+    span,
+    strong {
+      color: #fff;
+    }
+  }
+}

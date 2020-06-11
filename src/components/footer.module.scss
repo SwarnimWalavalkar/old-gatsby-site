@@ -1,0 +1,17 @@
+$footer-background-color: #1a2a4f;
+
+@import "~bulma/bulma.sass";
+
+.content {
+  color: #fff;
+  a {
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.6;
+    &:hover {
+      border-bottom: 2px solid #fff;
+      opacity: 1;
+      color: #fff;
+    }
+  }
+}

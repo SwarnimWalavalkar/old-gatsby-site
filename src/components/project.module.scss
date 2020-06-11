@@ -1,0 +1,67 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap");
+
+.container {
+  background: #141821;
+  margin: 10px;
+  color: white;
+
+  height: 24em;
+  width: 22rem;
+
+  display: inline-flex;
+  flex-flow: column nowrap;
+
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+    0 100px 80px rgba(0, 0, 0, 0.12);
+
+  .bgHead {
+    background: #135fb5;
+    height: 8em;
+
+    .stack {
+      display: flex;
+      flex-flow: row nowrap;
+    }
+  }
+
+  p,
+  h1,
+  a {
+    text-align: center;
+    margin: 10px 10px 5px 10px;
+    justify-self: center;
+    align-self: center;
+  }
+
+  a {
+    cursor: pointer;
+    text-decoration: none;
+    padding: 8px 8px;
+    background-color: #135fb5;
+    color: #fff;
+    border-radius: 2px;
+
+    &:hover {
+      text-decoration: underline;
+      color: #fff;
+    }
+  }
+
+  h1 {
+    text-decoration: underline;
+    font-family: "Lora", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 500;
+    font-size: 2.2em;
+  }
+
+  p {
+    font-family: "Merriweather", Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    line-height: 1.6em;
+    font-size: 1em;
+  }
+}

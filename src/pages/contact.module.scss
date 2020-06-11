@@ -1,0 +1,24 @@
+@import "~bulma/bulma.sass";
+
+.hero {
+  background-color: #151923;
+  color: white;
+}
+
+.social {
+  display: flex;
+  flex-flow: row nowrap;
+
+  justify-content: start;
+
+  a {
+    font-size: 1.4em;
+    padding: 1em;
+    color: inherit;
+    text-decoration: inherit;
+
+    &:hover {
+      color: rgb(224, 224, 224);
+    }
+  }
+}

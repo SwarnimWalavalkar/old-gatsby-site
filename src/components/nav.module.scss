@@ -1,0 +1,20 @@
+$navbar-background-color: #1b2c52;
+$navbar-dropdown-background-color: #1b2c52;
+
+$navbar-item-color: #fff;
+$navbar-item-active-color: #fff;
+$navbar-item-hover-color: #fff;
+$navbar-item-hover-background-color: transparent;
+
+@import "~bulma/bulma.sass";
+
+.navbar {
+  .navbar-menu {
+    .navbar-item {
+      &:hover {
+        border-bottom: 2px solid #fff;
+        padding-bottom: 6px;
+      }
+    }
+  }
+}
