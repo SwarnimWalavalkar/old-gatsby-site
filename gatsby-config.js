@@ -12,7 +12,7 @@ module.exports = {
     title: `Swarmim Walavalkar`,
     description: `Swarnim Walavalkar's Official Blog and Website`,
     author: `Swarnim Walavalkar`,
-    twitterUsername: "@swarnimwalavalkar",
+    twitterUsername: "@swarnim_vw",
     url: "https://swarnimwalavalkar.com",
     siteUrl,
     image: "images/head-image.png",
