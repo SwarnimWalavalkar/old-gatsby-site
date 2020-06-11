@@ -221,7 +221,7 @@ const IndexPage = () => {
               <a
                 rel="noopener noreferrer"
                 target="_blank"
-                href="https://twitter.com/"
+                href="https://twitter.com/swarnim_vw"
               >
                 <FontAwesomeIcon icon={faTwitter} />
               </a>
@@ -235,7 +235,7 @@ const IndexPage = () => {
               <a
                 rel="noopener noreferrer"
                 target="_blank"
-                href="https://www.instagram.com/"
+                href="https://www.instagram.com/swarnim_walavalkar/"
               >
                 <FontAwesomeIcon icon={faInstagram} />
               </a>

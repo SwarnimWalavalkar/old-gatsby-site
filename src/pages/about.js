@@ -37,21 +37,21 @@ const About = () => {
                   <a
                     rel="noopener noreferrer"
                     target="_blank"
-                    href="https://twitter.com"
+                    href="https://twitter.com/swarnim_vw"
                   >
                     <FontAwesomeIcon icon={faTwitter} />
                   </a>
                   <a
                     rel="noopener noreferrer"
                     target="_blank"
-                    href="https://github.com/"
+                    href="https://github.com/SwarnimWalavalkar"
                   >
                     <FontAwesomeIcon icon={faGithub} />
                   </a>
                   <a
                     rel="noopener noreferrer"
                     target="_blank"
-                    href="https://www.instagram.com/"
+                    href="https://www.instagram.com/swarnim_walavalkar/"
                   >
                     <FontAwesomeIcon icon={faInstagram} />
                   </a>
