@@ -38,26 +38,6 @@ import particlesParams from "../particlesParam.json"
 import calculateAge from "../utils/calculateAge"
 
 const IndexPage = () => {
-  /* Contentful Query */
-  //   const data = useStaticQuery(graphql`
-  //     query {
-  //       allContentfulProject {
-  //         edges {
-  //           node {
-  //             name
-  //             blurb {
-  //               blurb
-  //             }
-  //             stack
-  //             slug
-  //             contentful_id
-  //           }
-  //         }
-  //       }
-  //     }
-  //   `)
-
-  /* Primsic Query */
   const data = useStaticQuery(graphql`
     query {
       allPrismicProject {
