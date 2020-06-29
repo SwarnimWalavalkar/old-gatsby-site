@@ -5,7 +5,7 @@ import styles from "./blog.module.scss"
 import SEO from "../components/seo"
 
 import Layout from "../components/layout"
-import BlogCard from "../components/blog-card"
+import BlogCard from "../components/BlogCard"
 
 import { graphql, useStaticQuery } from "gatsby"
 

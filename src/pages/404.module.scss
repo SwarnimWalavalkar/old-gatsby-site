@@ -1,6 +1,6 @@
 @import "~bulma/bulma.sass";
 
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+// @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
 
 .wrapper {
   height: 100vh;
@@ -18,11 +18,11 @@
     flex-direction: column;
     justify-content: center;
 
-    .content {
-      h1 {
-        font-family: "Roboto Mono", monospace;
-      }
-    }
+    // .content {
+    //   h1 {
+    //     font-family: "Roboto Mono", monospace;
+    //   }
+    // }
 
     .btn {
       text-decoration: none;

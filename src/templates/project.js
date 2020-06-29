@@ -93,9 +93,6 @@ const Project = ({ data }) => {
   let stack = Project.data.stack
   let blurb = Project.data.blurb
 
-  console.log("Name:", name)
-  console.log("images:", images)
-
   const body = Project.data.body.map((slice, index) => {
     switch (slice.slice_type) {
       case "rich_text":

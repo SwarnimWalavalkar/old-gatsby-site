@@ -109,7 +109,7 @@ const blog = ({ data }) => {
     featured_image = <span />
   }
 
-  let seoImage
+  let seoImage = ""
   if (Post.data.featured_image.fluid) {
     seoImage = Post.data.featured_image.fluid.src
   } else {

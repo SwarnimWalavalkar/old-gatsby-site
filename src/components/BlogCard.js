@@ -3,7 +3,7 @@ import { Link } from "gatsby"
 
 import Img from "gatsby-image"
 
-import styles from "./blog-card.module.scss"
+import styles from "./BlogCard.module.scss"
 
 const BlogCard = ({ url, title, excerpt, imageUrl, author, publishedDate }) => {
   if (!imageUrl) {

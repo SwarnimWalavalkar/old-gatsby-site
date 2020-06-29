@@ -6,9 +6,10 @@ import SEO from "../components/seo"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTwitter } from "@fortawesome/free-brands-svg-icons"
-import { faFacebook } from "@fortawesome/free-brands-svg-icons"
 import { faGithub } from "@fortawesome/free-brands-svg-icons"
 import { faInstagram } from "@fortawesome/free-brands-svg-icons"
+
+import ContactForm from "../components/ContactForm"
 
 import Layout from "../components/layout"
 const Contact = () => (
@@ -65,51 +66,7 @@ const Contact = () => (
             <div
               className={`${styles.column} ${styles.isOneThird} ${styles.hasTextLeft}`}
             >
-              <form action="POST" name="contact" data-netlify="true">
-                <div className={`${styles.field}`}>
-                  <label className={`${styles.label} ${styles.hasTextWhite}`}>
-                    Name
-                  </label>
-                  <div className={`${styles.control}`}>
-                    <input
-                      className={`${styles.input} ${styles.isMedium}`}
-                      type="text"
-                      name="name"
-                    />
-                  </div>
-                </div>
-                <div className={`${styles.field}`}>
-                  <label className={`${styles.label} ${styles.hasTextWhite}`}>
-                    Email
-                  </label>
-                  <div className={`${styles.control}`}>
-                    <input
-                      className={`${styles.input} ${styles.isMedium}`}
-                      type="text"
-                      name="email"
-                    />
-                  </div>
-                </div>
-                <div className={`${styles.field}`}>
-                  <label className={`${styles.label} ${styles.hasTextWhite}`}>
-                    Message
-                  </label>
-                  <div className={`${styles.control}`}>
-                    <textarea
-                      className={`${styles.textarea} ${styles.isMedium}`}
-                      name="message"
-                    ></textarea>
-                  </div>
-                </div>
-                <div className={`${styles.control}`}>
-                  <button
-                    type="submit"
-                    className={`${styles.button} ${styles.isLink} ${styles.isFullwidth} ${styles.hasTextWeightMedium} ${styles.isMedium}`}
-                  >
-                    Send Message
-                  </button>
-                </div>
-              </form>
+              <ContactForm />
             </div>
           </div>
         </div>
