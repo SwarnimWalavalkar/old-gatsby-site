@@ -151,15 +151,11 @@ const blog = ({ data }) => {
               </div>
               <div className={`${styles.subscribe}`}>
                 <iframe
-                  src="https://swarnim.substack.com/embed"
-                  width="640"
-                  height="320"
-                  style={{
-                    border: `1px solid #EEE`,
-                    background: `#fff`,
-                  }}
+                  width="540"
+                  height="900"
+                  src="https://43d13095.sibforms.com/serve/MUIEAMyHAtp9n48iK7s08ZWehsRW7jk239MYJtWFJjuptJAc6xKC_2CaS0IxVIQ6xzPxCaqTEYVhpVy162xOgt-vRtazNjMsx77sMB5uk-Txj7cQHEc5iAJeR-rYhJCgca8Q1ANkFVDhz-dpNw9Zf84yz6YcLSUPevKlgjZA5YML2GzNpY2xaaosS2VE1f8DLEdhYh2-K5_59vl_"
                   frameborder="0"
-                  scrolling="no"
+                  allowfullscreen
                 ></iframe>
               </div>
             </div>
