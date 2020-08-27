@@ -2,7 +2,12 @@ import React from "react"
 import { graphql } from "gatsby"
 import Img from "gatsby-image"
 
-import { RichText } from "prismic-reactjs"
+import { MDXRenderer } from "gatsby-plugin-mdx"
+import { MDXProvider } from "@mdx-js/react"
+
+import Highlight, { defaultProps } from "prism-react-renderer"
+
+import dracula from "prism-react-renderer/themes/dracula"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -10,122 +15,95 @@ import SEO from "../components/seo"
 import styles from "./blog.module.scss"
 
 export const query = graphql`
-  query($uid: String!) {
-    prismicBlogPost(uid: { eq: $uid }) {
-      uid
-      data {
-        title {
-          text
-        }
-        featured_image {
-          fluid(maxWidth: 1920, maxHeight: 1080) {
-            ...GatsbyPrismicImageFluid
-            src
-          }
-          fixed(width: 1280, height: 720) {
-            ...GatsbyPrismicImageFixed
-          }
-        }
-        author {
-          text
-        }
-        excerpt {
-          text
-        }
-        keywords {
-          text
-        }
-        published_date(formatString: "MMMM Do, YYYY")
-        body {
-          ... on PrismicBlogPostBodyRichText {
-            slice_type
-            id
-            primary {
-              rich_text {
-                html
-                raw
-              }
+  query($slug: String!) {
+    mdx(frontmatter: { slug: { eq: $slug } }) {
+      frontmatter {
+        title
+        featureImage {
+          childImageSharp {
+            fluid(maxWidth: 1920, maxHeight: 1080) {
+              ...GatsbyImageSharpFluid
+              src
+            }
+            fixed(width: 1280, height: 720) {
+              ...GatsbyImageSharpFixed
             }
           }
-          ... on PrismicBlogPostBodyImage {
-            slice_type
-            id
-            primary {
-              image {
-                fluid(maxWidth: 1000, maxHeight: 800) {
-                  ...GatsbyPrismicImageFluid
-                }
-                fixed(width: 1280, height: 720) {
-                  ...GatsbyPrismicImageFixed
-                }
-              }
-            }
-          }
-          ... on PrismicBlogPostBodyTitleSectionTitle {
-            slice_type
-            id
-            primary {
-              section_title {
-                html
-              }
-            }
-          }
+          publicURL
         }
+        author
+        slug
+        date(formatString: "MMMM Do, YYYY")
+        excerpt
+        keywords
       }
+      body
+      rawBody
     }
   }
 `
 
 const blog = ({ data }) => {
-  const { prismicBlogPost: Post } = data
+  const { mdx: Post } = data
 
-  const blogBody = Post.data.body.map((slice, index) => {
-    switch (slice.slice_type) {
-      case "rich_text":
-        return <div>{RichText.render(slice.primary.rich_text.raw)}</div>
-      case "title_section_title":
-        return (
-          <div
-            dangerouslySetInnerHTML={{
-              __html: slice.primary.section_title.html,
-            }}
-          />
-        )
-      case "image":
-        return (
-          <div>
-            <Img fluid={slice.primary.image.fluid} />
-          </div>
-        )
-      default:
-        return <div />
-    }
-  })
-
-  let featured_image
-  if (Post.data.featured_image.fluid) {
-    featured_image = <Img fluid={Post.data.featured_image.fluid} />
+  let featuredImage
+  if (Post.frontmatter.featureImage.childImageSharp.fluid) {
+    featuredImage = (
+      <Img fluid={Post.frontmatter.featureImage.childImageSharp.fluid} />
+    )
   } else {
-    featured_image = <span />
+    featuredImage = <span />
   }
 
   let seoImage = ""
-  if (Post.data.featured_image.fluid) {
-    seoImage = Post.data.featured_image.fluid.src
+  if (Post.frontmatter.featureImage) {
+    seoImage = `https://www.swarnimwalavalkar.com${Post.frontmatter.featureImage.publicURL}`
   } else {
     seoImage = ""
   }
 
-  const keywords = Post.data.keywords.text.split(",")
+  const keywords = Post.frontmatter.keywords.split(",")
+
+  const components = {
+    pre: props => {
+      const className = props.children.props.className || ""
+      const matches = className.match(/language-(?<lang>.*)/)
+      return (
+        <Highlight
+          {...defaultProps}
+          theme={dracula}
+          code={props.children.props.children.trim()}
+          language={
+            matches && matches.groups && matches.groups.lang
+              ? matches.groups.lang
+              : ""
+          }
+        >
+          {({ className, style, tokens, getLineProps, getTokenProps }) => (
+            <pre className={className} style={style}>
+              {tokens.map((line, i) => (
+                <div {...getLineProps({ line, key: i })}>
+                  {line.map((token, key) => (
+                    <span {...getTokenProps({ token, key })} />
+                  ))}
+                </div>
+              ))}
+            </pre>
+          )}
+        </Highlight>
+      )
+    },
+  }
 
   return (
     <Layout>
       <SEO
-        title={Post.data.title.text}
+        title={Post.frontmatter.title}
         image={seoImage}
-        description={Post.data.excerpt.text}
+        description={Post.frontmatter.excerpt}
         keywords={keywords}
       />
+
       <div className={`${styles.wrapper}`}>
         <div className={`${styles.container} ${styles.isWidescreen}`}>
           <div className={`${styles.columns}`}>
@@ -136,17 +114,18 @@ const blog = ({ data }) => {
                 <h1
                   className={`${styles.title} ${styles.hasTextWhite} ${styles.is1}`}
                 >
-                  {Post.data.title.text}
+                  {Post.frontmatter.title}
                 </h1>
                 <p
                   className={`${styles.subtitle} ${styles.is6} ${styles.hasTextLight}`}
                 >
-                  {" "}
-                  By {Post.data.author.text} | {Post.data.published_date}
+                  By {Post.frontmatter.author} | {Post.frontmatter.date}
                 </p>
-                {featured_image}
+                {featuredImage}
                 <hr />
-                {blogBody}
+                <MDXProvider components={components}>
+                  <MDXRenderer>{Post.body}</MDXRenderer>
+                </MDXProvider>
                 <hr />
               </div>
               <div className={`${styles.subscribe}`}>

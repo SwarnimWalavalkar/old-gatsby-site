@@ -12,30 +12,28 @@ import { graphql, useStaticQuery } from "gatsby"
 const Blog = () => {
   const data = useStaticQuery(graphql`
     query {
-      allPrismicBlogPost {
+      allMdx(sort: { fields: frontmatter___date, order: DESC }) {
         edges {
           node {
-            data {
-              title {
-                text
-              }
-              featured_image {
-                fluid(maxWidth: 1000, maxHeight: 800) {
-                  ...GatsbyPrismicImageFluid
+            frontmatter {
+              slug
+              title
+              excerpt
+              date(formatString: "MMMM Do, YYYY")
+              author
+              featureImage {
+                childImageSharp {
+                  fluid(maxWidth: 1920, maxHeight: 1080) {
+                    ...GatsbyImageSharpFluid
+                    src
+                  }
+                  fixed(width: 1280, height: 720) {
+                    ...GatsbyImageSharpFixed
+                  }
                 }
-                fixed(width: 1280, height: 720) {
-                  ...GatsbyPrismicImageFixed
-                }
+                publicURL
               }
-              author {
-                text
-              }
-              excerpt {
-                text
-              }
-              published_date(formatString: "MMMM Do, YYYY")
             }
-            uid
           }
         }
       }
@@ -51,19 +49,19 @@ const Blog = () => {
 
       <section className={`${styles.wrapper}`}>
         <div className={`${styles.container} ${styles.isWidescreen}`}>
-          {data.allPrismicBlogPost.edges.map(edge => (
+          {data.allMdx.edges.map(edge => (
             <div className={`${styles.column}`}>
               <BlogCard
-                title={edge.node.data.title.text}
-                excerpt={edge.node.data.excerpt.text}
-                publishedDate={edge.node.data.published_date}
-                author={edge.node.data.author.text}
+                title={edge.node.frontmatter.title}
+                excerpt={edge.node.frontmatter.excerpt}
+                publishedDate={edge.node.frontmatter.date}
+                author={edge.node.frontmatter.author}
                 imageUrl={
-                  edge.node.data.featured_image.fluid
-                    ? edge.node.data.featured_image.fluid
+                  edge.node.frontmatter.featureImage.childImageSharp.fluid
+                    ? edge.node.frontmatter.featureImage.childImageSharp.fluid
                     : {}
                 }
-                url={`/blog/${edge.node.uid}`}
+                url={`/blog/${edge.node.frontmatter.slug}`}
               />
             </div>
           ))}

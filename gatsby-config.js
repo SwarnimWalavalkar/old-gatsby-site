@@ -73,27 +73,43 @@ module.exports = {
 
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
+    `gatsby-remark-images`,
+    {
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        extensions: [`.md`, `.mdx`],
+        gatsbyRemarkPlugins: [
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 1920,
+              linkImagesToOriginal: false,
+            },
+          },
+        ],
+        defaultLayouts: {
+          default: require.resolve(`./src/templates/blog.js`),
+        },
+      },
+    },
+
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        name: `data`,
-        path: `${__dirname}/src/data`,
+        name: `src`,
+        path: `${__dirname}/src`,
       },
     },
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `gatsby-starter-default`,
-        short_name: `starter`,
+        name: `Swarnim Walavalkar's Official Website`,
+        short_name: `Swarnim Walavalkar`,
         start_url: `/`,
-        background_color: `#141821`,
-        theme_color: `#141821`,
-        display: `minimal-ui`,
+        background_color: `#1B2C52`,
+        theme_color: `#151923`,
         icon: `src/data/images/swarnim-icon.png`, // This path is relative to the root of the site.
       },
     },
-    // this (optional) plugin enables Progressive Web App + Offline functionality
-    // To learn more, visit: https://gatsby.dev/offline
-    // `gatsby-plugin-offline`,
   ],
 }

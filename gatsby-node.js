@@ -33,25 +33,51 @@ module.exports.createPages = async ({ graphql, actions }) => {
     })
   })
 
-  const prismicBlogQuery = await graphql(`
-    query AllPrismicBlogPost {
-      allPrismicBlogPost {
+  const blogQuery = await graphql(`
+    query {
+      allMdx(sort: { fields: frontmatter___date, order: DESC }) {
         edges {
           node {
-            uid
+            frontmatter {
+              slug
+            }
           }
         }
       }
     }
   `)
 
-  prismicBlogQuery.data.allPrismicBlogPost.edges.forEach(edge => {
-    createPage({
+  const posts = blogQuery.data.allMdx.edges
+
+  posts.forEach(edge => {
+    actions.createPage({
+      path: `/blog/${edge.node.frontmatter.slug}`,
       component: blogTemplate,
-      path: `/blog/${edge.node.uid}`,
       context: {
-        uid: edge.node.uid,
+        slug: edge.node.frontmatter.slug,
       },
     })
   })
+
+  //   const prismicBlogQuery = await graphql(`
+  //     query AllPrismicBlogPost {
+  //       allPrismicBlogPost {
+  //         edges {
+  //           node {
+  //             uid
+  //           }
+  //         }
+  //       }
+  //     }
+  //   `)
+
+  //   prismicBlogQuery.data.allPrismicBlogPost.edges.forEach(edge => {
+  //     createPage({
+  //       component: blogTemplate,
+  //       path: `/blog/${edge.node.uid}`,
+  //       context: {
+  //         uid: edge.node.uid,
+  //       },
+  //     })
+  //   })
 }

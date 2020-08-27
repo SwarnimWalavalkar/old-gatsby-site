@@ -1,7 +1,7 @@
 {
-  "name": "swarnim-walavalkar",
+  "name": "swarnim-walavalkar-site",
   "private": true,
-  "description": "Swarnim Walavalkar Official",
+  "description": "Swarnim Walavalkar's Official Blog and Website",
   "version": "0.1.0",
   "author": "Swarnim Walavalkar",
   "dependencies": {
@@ -9,18 +9,22 @@
     "@fortawesome/free-brands-svg-icons": "^5.13.0",
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "@fortawesome/react-fontawesome": "^0.1.10",
+    "@mdx-js/mdx": "^1.6.16",
+    "@mdx-js/react": "^1.6.16",
     "@tippyjs/react": "^4.0.2",
     "bulma": "^0.8.0",
     "gatsby": "^2.20.9",
     "gatsby-image": "^2.2.39",
     "gatsby-plugin-google-analytics": "^2.3.3",
     "gatsby-plugin-manifest": "^2.3.3",
+    "gatsby-plugin-mdx": "^1.2.34",
     "gatsby-plugin-offline": "^3.0.32",
     "gatsby-plugin-react-helmet": "^3.1.21",
     "gatsby-plugin-robots-txt": "^1.5.1",
     "gatsby-plugin-sass": "^2.1.28",
     "gatsby-plugin-sharp": "^2.5.3",
     "gatsby-plugin-sitemap": "^2.4.4",
+    "gatsby-remark-images": "^3.3.25",
     "gatsby-source-filesystem": "^2.1.46",
     "gatsby-source-prismic": "^3.0.2",
     "gatsby-transformer-sharp": "^2.4.3",
@@ -34,11 +38,14 @@
   },
   "devDependencies": {
     "env-cmd": "^10.1.0",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "prism-react-renderer": "^1.1.1"
   },
   "keywords": [
-    "gatsby",
-    "swarnim walavalkar"
+    "swarnim walavalkar website",
+    "swarnim walavalkar site",
+    "swarnim walavalkar",
+    "gatsby"
   ],
   "license": "MIT",
   "scripts": {
@@ -48,13 +55,10 @@
     "start": "npm run develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+    "test": "echo \"Still working on those tests...\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
-  },
-  "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
+    "url": "https://github.com/SwarnimWalavalkar/personal-website"
   }
 }
