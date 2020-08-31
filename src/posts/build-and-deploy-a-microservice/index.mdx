@@ -1,0 +1,440 @@
+---
+title: "Build and Deploy a REST API Microservice with Python Flask and Docker"
+author: "Swarnim Walavalkar"
+slug: "build-and-deploy-a-microservice"
+date: 2020-08-31
+featureImage: "feature-img.jpg"
+excerpt: "Build and Deploy a REST API Microservice with Python Flask and Docker"
+keywords: "Rest API, Python, Flask, Flask Restful, Docker, flask-restful, flask-restful api, deploy api, deploy api docker, pipenv, pipenv docker, pipenv docker image"
+---
+
+## Objectives:
+
+- Build a simple but real-world useable REST API
+- Follow REST and Microservice Arch Best Practices
+- Deploy to a Docker Container
+
+## Technologies used:
+
+- Python
+- Flask
+- Flask Restful
+- Docker
+
+## Prerequisites:
+
+- A Foundational Understanding of Python
+- Acquaintance with the Flask Microframework
+- A Primary Understanding of Docker and Docker Container Management
+
+## Difficulty: ⚡⚡Intermediate
+
+## Setup:
+
+Make sure you have pipenv installed.
+
+```bash
+pip install pipenv
+```
+
+Then, start by making a directory for the project and cd into it
+
+```bash
+mkdir FlaskBookApi/
+cd FlaskBookApi/
+```
+
+Then install the flask and flask-restful packages using pipenv. This will do a couple of things:
+
+```bash
+pipenv install flask flask-restful
+```
+
+It creates a python virtual environment with your directory's name in a central location and installs the specified packages (in this case, _flask_ and _flask-restful_). Along with that, In your working directory, it creates the Pipfile, which contains all of the projects dependencies with their appropriate version numbers along with the Python version used by the project. It also creates the Pipfile.lock to enable deterministic builds in production.
+
+This isn't a pipenv tutorial, So I won't go into too much detail about that.
+
+## Write The API:
+
+Alright, Now the fun part! Lets Build this thing!
+
+Start by creating a Python file in the working directory.
+
+```bash
+touch api.py
+```
+
+Great! Now import and initialize flask and flask restful
+
+```python
+from flask import Flask
+from flask_restful import Resource, Api, reqparse, abort, marshal, fields
+
+# Initialize Flask
+app = Flask(__name__)
+api = Api(app)
+```
+
+Be sure to import the required modules from flask-restful as shown above.
+
+We'll be building a simple API that goes over the performing some basic CRUD operations on a datastore of books (or as it happens, in this case, a List of Dictionaries).
+
+We're going to use a simple Python Dictionary for storage, But it can easily be swapped in with a real database solution, should you need to. But for the sake of simplicity, I've decided to go with a simple List of Dictionaries
+
+Lets get started. First declare a List containing several Dictionaries, representing individual 'Book' elements
+
+```python
+# A List of Dicts to store all of the books
+books = [{
+    "id": 1,
+    "title": "Zero to One",
+    "author": "Peter Thiel",
+    "length": 195,
+    "rating": 4.17
+},
+    {
+    "id": 2,
+    "title": "Atomic Habits ",
+    "author": "James Clear",
+    "length": 319,
+    "rating": 4.35
+}
+]
+```
+
+Next, Set up a Dictionary to determine the schema for the book object, as expected by the API. This will help with validating requests later.
+
+```python
+# Schema For the Book Request JSON
+bookFields = {
+	"id": fields.Integer,
+    "title": fields.String,
+    "author": fields.String,
+    "length": fields.Integer,
+    "rating": fields.Float
+}
+```
+
+Flask Restful is an extension to the Flask Microframework that makes it a whole lot easier to build RESTful APIs
+
+A fundamental building block provided by flask-restful is Resources. Resources give you easy access to multiple HTTP methods just by defining the methods on your Resource Class.
+
+Here is the Book Resource class: This contains the HTTP routes for accessing, modifying and deleting each individual book entity. Now, Lets Break this down...
+
+```python
+# Resource: Individual Book Routes
+class Book(Resource):
+    def __init__(self):
+        # Initialize The Flsak Request Parser and add arguments as in an expected request
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument("title", type=str, location="json")
+        self.reqparse.add_argument("author", type=str, location="json")
+        self.reqparse.add_argument("length", type=int, location="json")
+        self.reqparse.add_argument("rating", type=float, location="json")
+
+        super(Book, self).__init__()
+
+    # GET - Returns a single book object given a matching id
+    def get(self, id):
+        book = [book for book in books if book['id'] == id]
+
+        if(len(book) == 0):
+            abort(404)
+
+        return{"book": marshal(book[0], bookFields)}
+
+    # PUT - Given an id
+    def put(self, id):
+        book = [book for book in books if book['id'] == id]
+
+        if len(book) == 0:
+            abort(404)
+
+        book = book[0]
+
+        # Loop Through all the passed agruments
+        args = self.reqparse.parse_args()
+        for k, v in args.items():
+            # Check if the passed value is not null
+            if v is not None:
+                # if not, set the element in the books dict with the 'k' object to the value provided in the request.
+                book[k] = v
+
+        return{"book": marshal(book, bookFields)}
+
+		# Delete - Given an id
+    def delete(self, id):
+        book = [book for book in books if book['id'] == id]
+
+        if(len(book) == 0):
+            abort(404)
+
+        books.remove(book[0])
+
+        return 201
+```
+
+First, In the init method of the class, you initialize the request parser. It'll allow you easy access to any variable on the _flask.request_ and also validates the response based on the arguments provided
+
+```python
+class Book(Resource):
+    def __init__(self):
+        # Initialize The Flsak Request Parser and add arguments as in an expected request
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument("title", type=str, location="json")
+        self.reqparse.add_argument("author", type=str, location="json")
+        self.reqparse.add_argument("length", type=int, location="json")
+        self.reqparse.add_argument("rating", type=float, location="json")
+
+        super(Book, self).__init__()
+```
+
+Next, The GET Method, This one's really simple, it takes in an id and loops through the books list and checks each element's id with the specified ID, If a match is found, it returns that dict. The _marshal_ method just makes sure the object that is being returned is being filtered through the fields defined in the bookFields dict.
+
+```python
+# GET - Returns a single book object given a matching id
+    def get(self, id):
+        book = [book for book in books if book['id'] == id]
+
+        if(len(book) == 0):
+            abort(404)
+
+        return{"book": marshal(book[0], bookFields)}
+```
+
+The Put method is used to update the element with the specified id, It takes a response object with the fields to be updated First, It loops through the books list and checks each element's id with the specified ID, If a match is found, It parses all of the provided arguments using the reqparser.
+
+Then, Loops through the parsed arguments and updates the fields as in the request object.
+
+```python
+# PUT - Given an id
+    def put(self, id):
+        book = [book for book in books if book['id'] == id]
+
+        if len(book) == 0:
+            abort(404)
+
+        book = book[0]
+
+        # Loop Through all the passed agruments
+        args = self.reqparse.parse_args()
+        for k, v in args.items():
+            # Check if the passed value is not null
+            if v is not None:
+                # if not, set the element in the books dict with the 'k' object to the value provided in the request.
+                book[k] = v
+
+        return{"book": marshal(book, bookFields)}
+```
+
+The Delete method just simply takes in an id and deletes the element in the books list with the id.
+
+```python
+# Delete - Given an id
+    def delete(self, id):
+        book = [book for book in books if book['id'] == id]
+
+        if(len(book) == 0):
+            abort(404)
+
+        books.remove(book[0])
+
+        return 201
+```
+
+Next is the BookList class, This contains the routes dealing with operations on the entire database.
+
+```python
+class BookList(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument(
+            "title", type=str, required=True, help="The title of the book must be provided", location="json")
+        self.reqparse.add_argument(
+            "author", type=str, required=True, help="The author of the book must be provided", location="json")
+        self.reqparse.add_argument("length", type=int, required=True,
+                                   help="The length of the book (in pages)", location="json")
+        self.reqparse.add_argument(
+            "rating", type=float, required=True, help="The rating must be provided", location="json")
+
+    def get(self):
+        return{"books": [marshal(book, bookFields) for book in books]}
+
+    def post(self):
+        args = self.reqparse.parse_args()
+        book = {
+            "id": books[-1]['id'] + 1 if len(books) > 0 else 1,
+            "title": args["title"],
+            "author": args["author"],
+            "length": args["length"],
+            "rating": args["rating"]
+        }
+
+        books.append(book)
+        return{"book": marshal(book, bookFields)}, 201
+```
+
+The Init method initializes the request parser. It parses the request JSON Object and also validates it based on the arguments provided.
+
+```python
+def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument(
+            "title", type=str, required=True, help="The title of the book must be provided", location="json")
+        self.reqparse.add_argument(
+            "author", type=str, required=True, help="The author of the book must be provided", location="json")
+        self.reqparse.add_argument("length", type=int, required=True,
+                                   help="The length of the book (in pages)", location="json")
+        self.reqparse.add_argument(
+            "rating", type=float, required=True, help="The rating must be provided", location="json")
+```
+
+The Get method simply returns all the elements in the books list
+
+```python
+def get(self):
+        return{"books": [marshal(book, bookFields) for book in books]}
+```
+
+The Post method takes a JSON Object. Parses it , creates a new dict and appends it to the Books list.
+
+```python
+def post(self):
+        args = self.reqparse.parse_args()
+        book = {
+            "id": books[-1]['id'] + 1 if len(books) > 0 else 1,
+            "title": args["title"],
+            "author": args["author"],
+            "length": args["length"],
+            "rating": args["rating"]
+        }
+
+        books.append(book)
+        return{"book": marshal(book, bookFields)}, 201
+```
+
+And Thats it! Now just attach those Resource classes to some endpoints and test it out!
+
+```python
+api.add_resource(BookList, "/books")
+api.add_resource(Book, "/books/<int:id>")
+
+if __name__ == "__main__":
+    app.run(debug=True)
+```
+
+## Deploy on Docker:
+
+Alright, Now lets deploy this microservice API to a docker container.
+
+First, create a Dockerfile in the project directory.
+
+A Docker file is in essence a set of instructions for building an Image which is a blueprint which your container will run off of.
+
+Lets go over this line by line.
+
+```docker
+FROM python:3.8
+
+RUN pip3 install pipenv
+
+ENV PROJECT_DIR /usr/src/flaskbookapi
+
+WORKDIR ${PROJECT_DIR}
+
+COPY Pipfile .
+COPY Pipfile.lock .
+COPY . .
+
+RUN pipenv install --deploy --ignore-pipfile
+
+EXPOSE 5000
+
+CMD ["pipenv", "run", "python", "api.py"]
+```
+
+This use the python 3.8 image from Docker Hub as our base image, This makes sure we have Python and all of its dependencies on the container
+
+```docker
+FROM python:3.8
+```
+
+This installs pipenv on the container.
+
+```docker
+RUN pip3 install pipenv
+```
+
+The first line sets a environment variable as a path to a directory to store the projects code.
+
+Then the next command sets that directory as the working directory.
+
+```docker
+ENV PROJECT_DIR /usr/src/flaskbookapi
+
+WORKDIR ${PROJECT_DIR}
+```
+
+Next, We copy over all of our files to the container
+
+```docker
+COPY Pipfile .
+COPY Pipfile.lock .
+COPY . .
+```
+
+This command runs pipenv install with the —deploy flag and also sets it to ignore the pipfile and just use the pipfile.lock to install dependencies
+
+```docker
+RUN pipenv install --deploy --ignore-pipfile
+```
+
+Next, We expose the 5000 port to be able to use it.
+
+```docker
+EXPOSE 5000
+```
+
+Finally, we run our program using the CMD command.
+
+```docker
+CMD ["pipenv", "run", "python", "api.py"]
+```
+
+Now lets use that Dockerfile to build an image which will later be used to make a container
+
+```bash
+docker build -t flaskbookapi:1.0 .
+```
+
+Now, finally! Fire up a container with the image we just built!
+
+```bash
+docker run -p 5000:5000 --name FlaskBookAPI flaskbookapi:1.0
+```
+
+And Boom! Out API is up and running! On a Docker container
+
+```bash
+$ docker run -p 5000:5000 --name FlaskBookAPI flaskbookapi:1.0
+ * Serving Flask app "api" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+```
+
+## Download the Project from GitHub:
+
+[https://github.com/SwarnimWalavalkar/rest-api-microservice-docker](https://github.com/SwarnimWalavalkar/rest-api-microservice-docker)
+
+## Further Reading:
+
+Flask Documentation: [https://flask.palletsprojects.com/en/1.1.x/](https://flask.palletsprojects.com/en/1.1.x/)
+
+Flast-Restful Documentation: [https://flask-restful.readthedocs.io/en/latest/](https://flask-restful.readthedocs.io/en/latest/)
+
+Docker Documentation: [https://docs.docker.com/](https://docs.docker.com/)
+
+Pipenv: [https://pipenv-fork.readthedocs.io/en/latest/](https://pipenv-fork.readthedocs.io/en/latest/)
