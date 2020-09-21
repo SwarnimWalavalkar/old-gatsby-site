@@ -17,7 +17,7 @@ const NotFoundPage = () => (
           >
             {"<404 />"}
           </h1>
-          <p>You just hit a route that doesn&#39;t exist... the sadness.</p>
+          <p>You've just hit a route that doesn&#39;t exist... The sadness.</p>
         </div>
         <div className={`${styles.columns}`}>
           <div className={`${styles.column}`}>

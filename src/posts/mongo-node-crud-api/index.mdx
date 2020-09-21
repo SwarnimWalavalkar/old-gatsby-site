@@ -1,0 +1,276 @@
+---
+title: "Build a MongoDB CRUD API with NodeJS"
+author: "Swarnim Walavalkar"
+slug: "mongo-node-crud-api"
+date: 2020-09-21
+featureImage: "feature-img.jpg"
+excerpt: "Build an API with Node using Express to perform CRUD Operations on a MongoDB Database"
+keywords: "blog, swarnim walavalkar, swarnim, mongodb, nodejs, monkjs, joi, build a mongodb crud api with nodejs"
+---
+
+# 🎯 Objectives:
+
+- Build a MongoDB CURD API with NodeJS
+
+# 👨‍💻 Technologies Used:
+
+- [ExpressJS](https://expressjs.com/)
+- [Monk](https://automattic.github.io/monk/)
+- [Joi](https://joi.dev/)
+
+# 📃 Prerequisites:
+
+- Javascript
+- NodeJS
+- ExpressJS
+- MongoDB Setup and Running on your machine
+
+# Difficulty: 🟡 Intermediate
+
+## **Setup**
+
+Start off by intializing a new NodeJS project inside an empty directory and installing _Monk_, _Express_, and _Joi_.
+
+- Init a node project
+
+```bash
+npm init -y
+```
+
+- Install express, monk, joi
+
+```bash
+npm i express monk joi
+```
+
+## Basic Express Server
+
+Then, Lets setup a basic express server to make sure everything is running as intended...
+
+**Setup a Hello World Server**
+
+```jsx
+const express = require("express")
+const app = express()
+const port = 3030
+
+//Express.json to parse the request json body into useable Javascript Objects
+app.use(express.json())
+
+app.get("/", (req, res) => {
+  res.send("<h1>Hello World!</h1>")
+})
+
+app.listen(port, () => {
+  console.log(`Listening on port http://localhost:${port}`)
+})
+```
+
+Run the application and check on your specified port
+
+```bash
+node app.js
+```
+
+## **Setup Monk**
+
+Monk is going to be the library we use to interface with the mongodb database.
+
+Lets Import it in. After that connect it to the mongodb server running in your system
+
+the port will likely be 27017. If in doubt refer to your mongodb daemon.
+
+> 💡 Make sure you have the mongodb deamon running on your system.
+
+The next thing we'll do is create and set the collection variable to the working collection we'll do all our operations on this object.
+
+Then we run a quick little log letting us know when the application has successfully connected to the database
+
+```jsx
+//import monk
+const monk = require("monk")
+
+//connect to mongo database
+const dbUrl = "localhost:27017/crud_api"
+const db = monk(dbUrl)
+
+// this collection variable will have the collection we'll be working with
+const collection = db.get("documents")
+
+//Notifies when the database is connected successfully
+db.then(() => {
+  console.log(`Database connected sucessfully`)
+})
+```
+
+## CRUD Routes
+
+### **Get all documents from database**
+
+```jsx
+app.get("/", async (req, res) => {
+  //Get all documents in the data variable using the collection.find() method
+  const data = await collection.find()
+  res.send(data)
+})
+```
+
+We call the _collection.find()_ method with no arguments which returns all documents in the collection.
+
+The Method returns a promise which resolves to an array of objects which we later send in our response.
+
+### **Find one Document with an ID**
+
+```jsx
+//Get a Specific Document with provided ID
+app.get("/:id", async (req, res) => {
+  //Find the document with the given id
+  try {
+    const document = await collection.findOne({
+      _id: req.params.id,
+    })
+
+    //Send the found document in the response
+    res.send(document)
+  } catch (err) {
+    //Incase of an errror send a 404 NOT FOUND
+    res.status(404).send({ error: "Document Not Found" })
+  }
+})
+```
+
+Very similarly with this one, We call the _collection.findOne()_ method this time with an object containing the filters to find the document through. In this case just the _id_.
+
+This also returns a promise which resolves to the found document which we send as our response.
+
+Incase of an error we send a 404 not found status code along with an error message.
+
+### Insert **Documents to DB**
+
+Before we could write the POST and PUT methods, we need to implement validation
+
+### **Setup Joi and Request Schema**
+
+Joi will be the library I'm going to use to handle request validation.
+
+```jsx
+// Joi Setup
+const Joi = require("joi")
+
+// Request Schema For the Post Method
+const BookPostSchema = Joi.object({
+  title: Joi.string().required(),
+  author: Joi.string().required(),
+  length: Joi.number().integer(),
+  rating: Joi.number().max(5),
+})
+```
+
+This schema object will be used to validate data coming in from the POST method.
+
+**Validate Data in the Post method**
+
+```jsx
+//Insert a single document in the database
+app.post("/", async (req, res) => {
+  try {
+    //Validate the request body
+    const requestData = await BookPostSchema.validateAsync(req.body)
+    //Insert it in the Database
+    const insertedData = await collection.insert(requestData)
+    //Send a 201 (Created) status code and the newly created data object
+    res.status(201).send(insertedData)
+  } catch (error) {
+    //In case of an error send the error object along with a 400 (Bad Request) status code
+    res.send(error)
+  }
+})
+```
+
+**Request Schema for the put method**
+
+```jsx
+// Request For the Put Method Schema
+const BookUpdateSchema = Joi.object({
+  title: Joi.string(),
+  author: Joi.string(),
+  length: Joi.number().integer(),
+  rating: Joi.number().max(5),
+})
+```
+
+This schema object will be used to validate data coming in from the PUT method.
+
+### **Put** **Route**
+
+```jsx
+//Update a Single Document
+app.put("/:id", async (req, res) => {
+  try {
+    //Validate the request body
+    const requestData = await BookUpdateSchema.validateAsync(req.body)
+    //Find the document with the given id and update with the request data
+    const updatedDocument = await collection.findOneAndUpdate(
+      {
+        _id: req.params.id,
+      },
+      { $set: requestData }
+    )
+
+    //if The document is found and updated
+    if (updatedDocument) {
+      //Send the updated document in the response
+      res.send(updatedDocument)
+    } else {
+      //Otherwise send a 404 Not FOUND error code
+      res.status(404).send({ error: "Document Not Found" })
+    }
+  } catch (error) {
+    //This catch block catches errors from the validation
+    //Which we send as the response
+    res.send(error)
+  }
+})
+```
+
+### **Delete Route**
+
+```jsx
+//Delete a Single Document
+app.delete("/:id", async (req, res) => {
+  //Delete the document with the provided id
+  const deletedDocument = await collection.findOneAndDelete({
+    _id: req.params.id,
+  })
+
+  //If the Document is found
+  if (deletedDocument) {
+    //Send a success message and the deleted document in the response
+    res.send({
+      message: "Document Deleted Succesfully",
+      deletedDocument: deletedDocument,
+    })
+  } else {
+    //Otherwise send an error
+    res.send({ error: "Document not found" }).status(404)
+  }
+})
+```
+
+And That's it! A very simple API written in Node and Express to perform CRUD Operations on a MongoDB database.
+
+## Download the Project from GitHub:
+
+[https://github.com/SwarnimWalavalkar/mongo-node-crud-api](https://github.com/SwarnimWalavalkar/mongo-node-crud-api)
+
+## Further Reading:
+
+Monk JS Documentation: [https://automattic.github.io/monk/](https://automattic.github.io/monk/)
+
+Joi Documentation: [https://joi.dev/api/](https://joi.dev/api/)
+
+Express JS Documentation: [https://expressjs.com/en/4x/api.html](https://expressjs.com/en/4x/api.html)
+
+Node JS Documentation: [https://nodejs.org/en/docs/](https://nodejs.org/en/docs/)
+
+MongoDB Node Driver Documentation: [https://docs.mongodb.com/drivers/node/](https://docs.mongodb.com/drivers/node/)
