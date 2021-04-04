@@ -37,7 +37,7 @@ const About = () => {
                   <a
                     rel="noopener noreferrer"
                     target="_blank"
-                    href="https://twitter.com/swarnim_vw"
+                    href="https://twitter.com/SwarnimVW"
                   >
                     <FontAwesomeIcon icon={faTwitter} />
                   </a>
